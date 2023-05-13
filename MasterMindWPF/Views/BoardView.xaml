@@ -3,36 +3,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MasterMindWPF.Views"
+             xmlns:local="clr-namespace:MasterMindWPF.Views" xmlns:localconverter="clr-namespace:MasterMindWPF.Views.Converters"
              mc:Ignorable="d" 
              x:Name="View"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <UserControl.Resources>
+        <localconverter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    
+    <Grid HorizontalAlignment="Center" Background="Transparent" Width="500">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <TextBlock FontSize="55" Grid.Row="0">Target Pattern Block</TextBlock>
-        <Button Command="{Binding AddCommand}" Content="Add Attempt" Grid.Row="1"/>
-
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="140"/>
+            </Grid.ColumnDefinitions>
+            <Button Width="120" Grid.Column="0" BorderBrush="Transparent" Background="CornflowerBlue" FontSize="22" Content="New Game" Grid.Row="0" Command="{Binding NewGameCommand}"/>
+            <Grid Grid.Column="1" HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Attempt: " FontSize="22" VerticalAlignment="Center" Grid.Column="0"/>
+                <TextBlock Text="{Binding AttemptCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" FontSize="22" VerticalAlignment="Center" Grid.Column="1"/>
+            </Grid>
+        </Grid>
+       
+        
+        <Grid Grid.Row="1" Visibility="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <Ellipse Grid.Column="0" Width="50" Height="50" Fill="{Binding TargetColorDisplay1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+            <Ellipse Grid.Column="1" Width="50" Height="50" Fill="{Binding TargetColorDisplay2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+            <Ellipse Grid.Column="2" Width="50" Height="50" Fill="{Binding TargetColorDisplay3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+            <Ellipse Grid.Column="3" Width="50" Height="50" Fill="{Binding TargetColorDisplay4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+        </Grid>
         <!-- attempts-->
         <Grid Grid.Row="2">
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="60"/>
-            </Grid.RowDefinitions>-->
-
-            <ItemsControl ItemsSource="{Binding DataContext.Attempts, ElementName=View, UpdateSourceTrigger=PropertyChanged}">
+                <ScrollViewer VerticalScrollBarVisibility="Visible">
+            <ItemsControl ItemsSource="{Binding DataContext.Attempts, ElementName=View, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Background="DarkSlateGray" Margin="5,5,5,5">
@@ -73,7 +92,41 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            </ScrollViewer>
         </Grid>
-        <TextBlock FontSize="55" Grid.Row="3">AttemptBlock</TextBlock>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+           
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <ComboBox Grid.Column="1" ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <ComboBox Grid.Column="2" ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <ComboBox Grid.Column="3" ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Button Grid.Column="4" IsEnabled="{Binding AttemptsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Content="Try" Command="{Binding TryAttemptCommand}"/>
+            </Grid>
+            <Grid Grid.Row="1" HorizontalAlignment="Center"  Background="DarkSlateGray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <Ellipse Grid.Column="0" Width="50" Height="50" Fill="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <Ellipse Grid.Column="1" Width="50" Height="50" Fill="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <Ellipse Grid.Column="2" Width="50" Height="50" Fill="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <Ellipse Grid.Column="3" Width="50" Height="50" Fill="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
