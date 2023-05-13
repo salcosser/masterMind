@@ -4,11 +4,11 @@
 winexe
 C#
 .cs
-C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\
+C:\SANDBOX\masterMind\MasterMindWPF\obj\Release\
 MasterMindWPF
 none
 false
-DEBUG;TRACE
+TRACE
 C:\SANDBOX\masterMind\MasterMindWPF\App.xaml
 2-650083960
 
