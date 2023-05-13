@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="MasterMindWPF.Views.BoardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MasterMindWPF.Views"
+             mc:Ignorable="d" 
+             x:Name="View"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <TextBlock FontSize="55" Grid.Row="0">Target Pattern Block</TextBlock>
+        <Button Command="{Binding AddCommand}" Content="Add Attempt" Grid.Row="1"/>
+
+        <!-- attempts-->
+        <Grid Grid.Row="2">
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>-->
+
+            <ItemsControl ItemsSource="{Binding DataContext.Attempts, ElementName=View, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="DarkSlateGray" Margin="5,5,5,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="350"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <!-- color pieces block-->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Grid.Column="0" Width="50" Height="50" Fill="{Binding Path=Piece1.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Ellipse Grid.Column="1" Width="50" Height="50" Fill="{Binding Path=Piece2.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Ellipse Grid.Column="2" Width="50" Height="50" Fill="{Binding Path=Piece3.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Ellipse Grid.Column="3" Width="50" Height="50" Fill="{Binding Path=Piece4.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <!--grading pieces block-->
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="26"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Foreground="WhiteSmoke" Grid.Column="0">Black</TextBlock>
+                                <TextBlock Grid.Row="0" Foreground="WhiteSmoke" Grid.Column="1" Text="{Binding Path=BlackPieces, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="1" Foreground="WhiteSmoke" Grid.Column="0">White</TextBlock>
+                                <TextBlock Grid.Row="1" Foreground="WhiteSmoke" Grid.Column="1" Text="{Binding Path=WhitePieces, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                           
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        <TextBlock FontSize="55" Grid.Row="3">AttemptBlock</TextBlock>
+    </Grid>
+</UserControl>
