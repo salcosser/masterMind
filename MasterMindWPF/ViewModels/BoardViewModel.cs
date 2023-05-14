@@ -9,22 +9,25 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace MasterMindWPF.ViewModels {
     public class BoardViewModel : BindableBase {
 
         public BoardViewModel() {
             Attempts = new ObservableCollection<Attempt>();
-            ColorOptions = new List<string>();
             SetupLookups();
             NewGame();
         }
 
         public ObservableCollection<Attempt> Attempts { get; }
-        public List<string> ColorOptions { get; }
+        public List<Brush> ColorOptions { get; set; }
 
         public DelegateCommand TryAttemptCommand { get { return new DelegateCommand(TryAttempt); } }
         public DelegateCommand NewGameCommand { get { return new DelegateCommand(NewGame); } }
+        public DelegateCommand GiveUpCommand { get { return new DelegateCommand(() => GameOver(false)); } }
 
         private int attemptCount;
         public int AttemptCount {
@@ -43,6 +46,12 @@ namespace MasterMindWPF.ViewModels {
         public bool AttemptsEnabled {
             get { return attemptsEnabled; }
             set => Set(ref attemptsEnabled, value);
+        }
+
+        private bool wonGame;
+        public bool WonGame {
+            get { return wonGame; }
+            set => Set(ref wonGame, value);
         }
 
 
@@ -95,7 +104,30 @@ namespace MasterMindWPF.ViewModels {
             set => Set(ref targetColorDisplay4, value);
         }
 
+
+
+
         public void TryAttempt() {
+            if (string.IsNullOrEmpty(SelectedColor1)) {
+                MessageBox.Show("Select a color for the first piece.","Missing Color");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(SelectedColor2)) {
+                MessageBox.Show("Select a color for the second piece.", "Missing Color");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(SelectedColor3)) {
+                MessageBox.Show("Select a color for the third piece.", "Missing Color");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(SelectedColor4)) {
+                MessageBox.Show("Select a color for the fourth piece.", "Missing Color");
+                return;
+            }
+
             var att = new Attempt();
           
             var p1 = new PatternPiece();
@@ -121,17 +153,18 @@ namespace MasterMindWPF.ViewModels {
 
 
             if (att.BlackPieces == 4) {
-                GameOver();
+                GameOver(true);
             }
         }
 
-
-        public void GameOver() {
+        public void GameOver(bool wonGame = false) {
+            WonGame = wonGame;
             AttemptsEnabled = false;
             TargetPatternVisible = true;
         }
 
         public void NewGame() {
+            WonGame = false;
             TargetPatternVisible = false;
             GeneratePattern();
             Attempts.Clear();
@@ -141,10 +174,11 @@ namespace MasterMindWPF.ViewModels {
 
 
         public void GeneratePattern() {
-           TargetColorDisplay1 = GetRandomColor();
-           TargetColorDisplay2 = GetRandomColor();
-           TargetColorDisplay3 = GetRandomColor();
-           TargetColorDisplay4 = GetRandomColor();
+           var rand = new Random(Guid.NewGuid().GetHashCode());
+           TargetColorDisplay1 = GetRandomColor(rand);
+           TargetColorDisplay2 = GetRandomColor(rand);
+           TargetColorDisplay3 = GetRandomColor(rand);
+           TargetColorDisplay4 = GetRandomColor(rand);
         }
 
         public void GradeAttempt(ref Attempt attempt) {
@@ -185,8 +219,7 @@ namespace MasterMindWPF.ViewModels {
 
         }
 
-        private string GetRandomColor() {
-            var random = new Random();
+        private string GetRandomColor(Random random) {
             var randInt = random.Next(1, 7);
 
             switch(randInt) {
@@ -211,12 +244,16 @@ namespace MasterMindWPF.ViewModels {
 
 
         public void SetupLookups() {
-            ColorOptions.Add(MMConstants.CC_Blue);
-            ColorOptions.Add(MMConstants.CC_Red);
-            ColorOptions.Add(MMConstants.CC_Green);
-            ColorOptions.Add(MMConstants.CC_Yellow);
-            ColorOptions.Add(MMConstants.CC_Black);
-            ColorOptions.Add(MMConstants.CC_White);
+
+            ColorOptions = new List<Brush>{
+                new SolidColorBrush(Colors.Red),
+                new SolidColorBrush(Colors.Blue),
+                new SolidColorBrush(Colors.Green),
+                new SolidColorBrush(Colors.Yellow),
+                new SolidColorBrush(Colors.Black),
+                new SolidColorBrush(Colors.White)
+            };
         }
+       
     }
 }
