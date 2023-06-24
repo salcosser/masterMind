@@ -1,2 +1,2 @@
 # masterMind
-Mastermind Board game
+App for the Mastermind Board game
