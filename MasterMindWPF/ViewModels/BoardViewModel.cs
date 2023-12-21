@@ -20,6 +20,7 @@ namespace MasterMindWPF.ViewModels {
             Attempts = new ObservableCollection<Attempt>();
             SetupLookups();
             NewGame();
+           
         }
 
         public ObservableCollection<Attempt> Attempts { get; }
@@ -106,7 +107,6 @@ namespace MasterMindWPF.ViewModels {
 
 
 
-
         public void TryAttempt() {
             if (string.IsNullOrEmpty(SelectedColor1)) {
                 MessageBox.Show("Select a color for the first piece.","Missing Color");
@@ -184,17 +184,21 @@ namespace MasterMindWPF.ViewModels {
         public void GradeAttempt(ref Attempt attempt) {
 
             var usableTargets = new int[] { 1, 1, 1, 1 };
-            var targetDict = new Dictionary<int, string>();
-            targetDict.Add(0, TargetColorDisplay1);
-            targetDict.Add(1, TargetColorDisplay2);
-            targetDict.Add(2, TargetColorDisplay3);
-            targetDict.Add(3, TargetColorDisplay4);
+            var targetDict = new Dictionary<int, string>
+            {
+                { 0, TargetColorDisplay1 },
+                { 1, TargetColorDisplay2 },
+                { 2, TargetColorDisplay3 },
+                { 3, TargetColorDisplay4 }
+            };
 
-            var attemptDict = new Dictionary<int, string>();
-            attemptDict.Add(0, attempt.Piece1.Color);
-            attemptDict.Add(1, attempt.Piece2.Color);
-            attemptDict.Add(2, attempt.Piece3.Color);
-            attemptDict.Add(3, attempt.Piece4.Color);
+            var attemptDict = new Dictionary<int, string>
+            {
+                { 0, attempt.Piece1.ColorName },
+                { 1, attempt.Piece2.ColorName },
+                { 2, attempt.Piece3.ColorName },
+                { 3, attempt.Piece4.ColorName }
+            };
 
 
 

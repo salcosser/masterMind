@@ -62,6 +62,5 @@ namespace MasterMindWPF.Model {
             Piece3 = new PatternPiece();
             Piece4 = new PatternPiece();
         }
-
     }
 }
