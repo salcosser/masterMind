@@ -1,29 +1,26 @@
 ﻿using MasterMindWPF.Model;
 using Prism.Commands;
-using Prism.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 
-namespace MasterMindWPF.ViewModels {
+namespace MasterMindWPF.ViewModels
+{
     public class BoardViewModel : BindableBase {
 
         public BoardViewModel() {
             Attempts = new ObservableCollection<Attempt>();
+            RecordedGames = new ObservableCollection<PreviousGame>();
             SetupLookups();
             NewGame();
            
         }
-
         public ObservableCollection<Attempt> Attempts { get; }
+        public ObservableCollection<PreviousGame> RecordedGames { get; }
+
         public List<Brush> ColorOptions { get; set; }
 
         public DelegateCommand TryAttemptCommand { get { return new DelegateCommand(TryAttempt); } }
@@ -48,7 +45,6 @@ namespace MasterMindWPF.ViewModels {
             get { return attemptsEnabled; }
             set => Set(ref attemptsEnabled, value);
         }
-
         private bool wonGame;
         public bool WonGame {
             get { return wonGame; }
@@ -159,6 +155,9 @@ namespace MasterMindWPF.ViewModels {
 
         public void GameOver(bool wonGame = false) {
             WonGame = wonGame;
+            if (WonGame) {
+                RecordGame();
+            }
             AttemptsEnabled = false;
             TargetPatternVisible = true;
         }
@@ -172,6 +171,17 @@ namespace MasterMindWPF.ViewModels {
             AttemptsEnabled = true;
         }
 
+        private void RecordGame() {
+            var game = new PreviousGame();
+            game.Tries = AttemptCount;
+            RecordedGames.Add(game);
+            var orderedGames = RecordedGames.OrderBy(g => g.Tries).ToList();
+            for(int i = 0; i < orderedGames.Count; i++) {
+                orderedGames[i].Rank = i + 1;
+            }
+            RecordedGames.Clear();
+            RecordedGames.AddRange(orderedGames);
+        }
 
         public void GeneratePattern() {
            var rand = new Random(Guid.NewGuid().GetHashCode());

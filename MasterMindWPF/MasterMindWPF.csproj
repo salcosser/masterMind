@@ -84,6 +84,7 @@
     <Compile Include="Model\Attempt.cs" />
     <Compile Include="Model\PatternPiece.cs" />
     <Compile Include="BIndableBase.cs" />
+    <Compile Include="Model\PreviousGame.cs" />
     <Compile Include="ViewModels\BoardViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\BoardView.xaml.cs">

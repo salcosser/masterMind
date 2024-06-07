@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MasterMindWPF" xmlns:UserControl="clr-namespace:MasterMindWPF.Views"
         mc:Ignorable="d"
-        Title="Master Mind" Height="450" Width="800">
-    <Grid>
+        Title="Master Mind">
+    <Grid Background="DarkSlateBlue">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="MasterMind" FontSize="72"  Grid.Row="0" TextAlignment="Center" VerticalAlignment="Top"/>
-        <UserControl:BoardView Grid.Row="1" DataContext="{Binding BoardViewModel}"/>
+        <UserControl:BoardView Grid.Row="1" DataContext="{Binding BoardViewModel}" Margin="0,20,0,0"/>
     </Grid>
 </Window>

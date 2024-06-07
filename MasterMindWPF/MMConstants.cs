@@ -17,15 +17,6 @@ namespace MasterMindWPF {
 
 
 
-        //ColorOptions = new List<Brush>{
-        //        new SolidColorBrush(Colors.Red),
-        //        new SolidColorBrush(Colors.Blue),
-        //        new SolidColorBrush(Colors.Green),
-        //        new SolidColorBrush(Colors.Yellow),
-        //        new SolidColorBrush(Colors.Black),
-        //        new SolidColorBrush(Colors.White)
-        //    };
-
 
         public static Dictionary<string, string> ColorNameToHex = new Dictionary<string, string>
         {

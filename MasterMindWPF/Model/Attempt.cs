@@ -12,7 +12,6 @@ namespace MasterMindWPF.Model {
         public Attempt() {
         }
 
-
         private int blackPieces;
         public int BlackPieces {
             get => blackPieces;
