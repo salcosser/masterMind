@@ -5,13 +5,15 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindWPF", "MasterMindWPF.csproj", "{11FCCB28-6FC6-4C43-B43A-BAF1038CA302}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "..\WebApi\WebApi.csproj", "{E0967BA0-2DE3-4E0A-ABC7-BBD224A3BFE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "..\WebApi\WebApi.csproj", "{E0967BA0-2DE3-4E0A-ABC7-BBD224A3BFE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Services", "..\WebApil.Services\WebApi.Services.csproj", "{EFD8ECE0-3221-4682-B971-A98721EC0FE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Services", "..\WebApil.Services\WebApi.Services.csproj", "{EFD8ECE0-3221-4682-B971-A98721EC0FE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Repository", "..\WebApi.Repository\WebApi.Repository.csproj", "{5E4FE15A-3CBE-4AC7-983B-86E623716CA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Repository", "..\WebApi.Repository\WebApi.Repository.csproj", "{5E4FE15A-3CBE-4AC7-983B-86E623716CA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C36BD7C2-DA16-424B-9B1D-4C76D9D6E242}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{B5E9023A-9A5C-4222-B6DC-E05DB3F68F31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

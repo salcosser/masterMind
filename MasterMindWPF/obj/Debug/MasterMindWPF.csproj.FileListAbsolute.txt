@@ -77,3 +77,7 @@ C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\MasterMindWPF.Properties.Resources
 C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\MasterMindWPF.csproj.GenerateResource.cache
 C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\MasterMindWPF.csproj.CoreCompileInputs.cache
 C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\MasterMindWPF.csproj.CopyComplete
+C:\SANDBOX\masterMind\MasterMindWPF\bin\Debug\MasterMindWPF.exe.manifest
+C:\SANDBOX\masterMind\MasterMindWPF\bin\Debug\MasterMindWPF.application
+C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\MasterMindWPF.exe.manifest
+C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\MasterMindWPF.application

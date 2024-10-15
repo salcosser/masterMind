@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\
+D:\SANDBOX\masterMind\MasterMindWPF\obj\Debug\
 MasterMindWPF
 none
 false
 DEBUG;TRACE
-C:\SANDBOX\masterMind\MasterMindWPF\App.xaml
+D:\SANDBOX\masterMind\MasterMindWPF\App.xaml
 2-650083960
 
-14-817200177
-126723165572
+151104577944
+126357079464
 MainWindow.xaml;Views\BoardView.xaml;
 
-False
+True
 
