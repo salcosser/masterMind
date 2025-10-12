@@ -1,223 +1,343 @@
 ﻿<UserControl x:Class="MasterMindWPF.Views.BoardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MasterMindWPF.Views" xmlns:localconverter="clr-namespace:MasterMindWPF.Views.Converters"
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MasterMindWPF.Views"
+             xmlns:localconverter="clr-namespace:MasterMindWPF.Views.Converters"
+             mc:Ignorable="d"
              x:Name="View"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="720" d:DesignWidth="1100">
     <UserControl.Resources>
         <localconverter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <DataTemplate x:Key="EllipseComboBoxTemplate">
-            <ComboBox ItemsSource="{Binding ColorOptions}">
-                <ComboBox.ItemTemplate>
+
+        <SolidColorBrush x:Key="PrimaryAccent" Color="#3949AB"/>
+        <SolidColorBrush x:Key="PrimaryAccentLight" Color="#5C6BC0"/>
+        <SolidColorBrush x:Key="MutedText" Color="#4A5568"/>
+        <SolidColorBrush x:Key="PanelBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PanelBorder" Color="#E2E8F0"/>
+
+        <Style TargetType="Button" x:Key="PrimaryButtonStyle">
+            <Setter Property="Background" Value="{StaticResource PrimaryAccent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#40000000" BlurRadius="12" ShadowDepth="0" Opacity="0.25"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="12,4"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.45"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource PrimaryAccentLight}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ComboBox" x:Key="ColorPickerStyle">
+            <Setter Property="Width" Value="68"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PanelBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#F7FAFC"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
                     <DataTemplate>
-                        <Ellipse Width="20" Height="20" Fill="{Binding}" Margin="5" />
+                        <Ellipse Width="20" Height="20" Fill="{Binding}" Margin="6"/>
                     </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
-    <Grid>
+
+    <Grid Background="Transparent">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" MinWidth="300"/>
-            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="280"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Background="MediumSlateBlue" Margin="10,0,0,10">
+
+        <!-- Scoreboard -->
+        <Border Grid.Column="0"
+                Margin="0,0,24,0"
+                Padding="20"
+                Background="{StaticResource PanelBackground}"
+                CornerRadius="18"
+                BorderBrush="{StaticResource PanelBorder}"
+                BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="Hall of Fame"
+                           FontSize="22"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedText}"/>
+                <TextBlock Text="Your smartest crack attempts"
+                           Margin="0,4,0,16"
+                           Foreground="#718096"
+                           FontSize="14"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              MaxHeight="520">
+                    <ItemsControl ItemsSource="{Binding DataContext.RecordedGames, ElementName=View, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,0,12"
+                                        Padding="12"
+                                        Background="#EDF2F7"
+                                        CornerRadius="12">
+                                    <TextBlock Text="{Binding Path=AsText}"
+                                               FontSize="20"
+                                               FontWeight="SemiBold"
+                                               Foreground="#2D3748"
+                                               TextAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+
+        <!-- Game board -->
+        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="300"/>
-            </Grid.RowDefinitions>
-            <TextBlock Text="High Scores" FontSize="22" HorizontalAlignment="Center" Grid.Row="0" />
-            <ItemsControl Padding="20,0,20,0" ItemsSource="{Binding DataContext.RecordedGames, ElementName=View, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="1">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Path=AsText}" FontSize="44" HorizontalAlignment="Center"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
-        <Grid HorizontalAlignment="Center" Background="Transparent" Width="500" SnapsToDevicePixels="True" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="200"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+
+            <!-- Actions Row -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Width="120" Grid.Column="0" BorderBrush="Transparent" Background="CornflowerBlue" FontSize="22" Content="New Game" Grid.Row="0" Command="{Binding NewGameCommand}"/>
-                <Button Width="120" Grid.Column="1" BorderBrush="Transparent" Background="CornflowerBlue" FontSize="22" Content="Give Up" Grid.Row="0" Command="{Binding GiveUpCommand}"/>
-                <Grid Grid.Column="2" HorizontalAlignment="Right">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="40"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Attempts: " FontSize="22" VerticalAlignment="Center" Grid.Column="0"/>
-                    <TextBlock Text="{Binding AttemptCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" FontSize="22" VerticalAlignment="Center" Grid.Column="1"/>
-                    <Grid.Style>
-                        <Style>
+
+                <Button Grid.Column="0"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Content="New Game"
+                        Command="{Binding NewGameCommand}"/>
+
+                <Button Grid.Column="1"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Content="Give Up"
+                        Command="{Binding GiveUpCommand}"/>
+
+                <Border Grid.Column="2"
+                        Margin="20,0,0,0"
+                        Padding="18,12"
+                        Background="#EDF2F7"
+                        CornerRadius="14">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Text="Attempts"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="#4A5568"/>
+                        <TextBlock Text="{Binding AttemptCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                   Margin="12,0,0,0"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#2C5282"/>
+                    </StackPanel>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="#EDF2F7"/>
+                            <Setter Property="CornerRadius" Value="14"/>
+                            <Setter Property="Padding" Value="18,12"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Value="True">
-                                    <Setter Property="Grid.Background" Value="Green"/>
-                                    <Setter Property="TextBlock.Foreground" Value="LightBlue"/>
-                                    <Setter Property="TextBlock.FontStyle" Value="Oblique"/>
-                                    <Setter Property="TextBlock.FontSize" Value="26"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Value="False">
-                                    <Setter Property="Grid.Background" Value="Transparent"/>
-                                    <Setter Property="TextBlock.Foreground" Value="Black"/>
-                                    <Setter Property="TextBlock.FontStyle" Value="Normal"/>
-                                    <Setter Property="TextBlock.FontSize" Value="26"/>
+                                <DataTrigger Binding="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                             Value="True">
+                                    <Setter Property="Background" Value="#C6F6D5"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </Grid.Style>
-                </Grid>
+                    </Border.Style>
+                </Border>
             </Grid>
-           
-            
-            <Grid Grid.Row="1" Background="DarkSlateGray" Visibility="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="100"/>
-                </Grid.ColumnDefinitions>
-                <Ellipse Grid.Column="0" Width="50" Height="50" Fill="{Binding TargetColorDisplay1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                <Ellipse Grid.Column="1" Width="50" Height="50" Fill="{Binding TargetColorDisplay2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                <Ellipse Grid.Column="2" Width="50" Height="50" Fill="{Binding TargetColorDisplay3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                <Ellipse Grid.Column="3" Width="50" Height="50" Fill="{Binding TargetColorDisplay4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                <TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Foreground="LightGray" Text="Noice!"
-                           Visibility="{Binding WonGame, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            </Grid>
-            <!-- attempts-->
-            <Grid Grid.Row="2">
-                    <ScrollViewer VerticalScrollBarVisibility="Visible">
-                <ItemsControl ItemsSource="{Binding DataContext.Attempts, ElementName=View, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Background="DarkSlateGray" Margin="5,5,5,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="250"/>
-                                    <ColumnDefinition Width="350"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0">
-                                    <!-- color pieces block-->
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="60"/>
-                                        <ColumnDefinition Width="60"/>
-                                        <ColumnDefinition Width="60"/>
-                                        <ColumnDefinition Width="60"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Ellipse Grid.Column="0" Width="50" Height="50" Fill="{Binding Path=Piece1.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Ellipse Grid.Column="1" Width="50" Height="50" Fill="{Binding Path=Piece2.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Ellipse Grid.Column="2" Width="50" Height="50" Fill="{Binding Path=Piece3.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Ellipse Grid.Column="3" Width="50" Height="50" Fill="{Binding Path=Piece4.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid>
-                                <Grid Grid.Column="1">
-                                    <!--grading pieces block-->
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="26"/>
-                                        <RowDefinition Height="26"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="160"/>
-                                        <ColumnDefinition Width="60"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Row="0" Foreground="WhiteSmoke" TextAlignment="Right" Grid.Column="0" Text="Right Color + Right Place: "/>
-                                        <TextBlock Grid.Row="0" Foreground="WhiteSmoke"  TextAlignment="Center" Grid.Column="1" Text="{Binding Path=BlackPieces, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <TextBlock Grid.Row="1" Foreground="WhiteSmoke"  TextAlignment="Right" Grid.Column="0" Text="Right Color + Wrong Place: "/>
-                                        <TextBlock Grid.Row="1" Foreground="WhiteSmoke" Grid.Column="1" TextAlignment="Center" Text="{Binding Path=WhitePieces, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid>
-                               
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                </ScrollViewer>
-            </Grid>
-            <Grid Grid.Row="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="90"/>
-                    <RowDefinition Height="120"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0" HorizontalAlignment="Center">
+
+            <!-- Reveal Pattern -->
+            <Border Grid.Row="1"
+                    Margin="0,0,0,24"
+                    Padding="18"
+                    Background="#1A365D"
+                    CornerRadius="16"
+                    Visibility="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ContentControl Grid.Column="0" Width="60" Height="40" >
-                            <ComboBox ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Ellipse Width="20" Height="20" Fill="{Binding}" Margin="5" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                    </ContentControl>
-                    <ContentControl Grid.Column="1" Width="60" Height="40" >
-                        <ComboBox ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Ellipse Width="20" Height="20" Fill="{Binding}" Margin="5" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                    </ContentControl>
-                    <ContentControl Grid.Column="2" Width="60" Height="40"  >
-                        <ComboBox ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Ellipse Width="20" Height="20" Fill="{Binding}" Margin="5" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                    </ContentControl>
-                    <ContentControl Grid.Column="3" Width="60" Height="40" >
-                        <ComboBox ItemsSource="{Binding ColorOptions}" SelectedValue="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Ellipse Width="20" Height="20" Fill="{Binding}" Margin="5" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                    </ContentControl>
-                    <Button Grid.Column="4"
-                            IsEnabled="{Binding AttemptsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                            Height="30"
-                            Width="50"
-                            FontSize="18"
-                            Background="LightGray"
-                            BorderBrush="Transparent"
-                            Content="Try"
-                            Command="{Binding TryAttemptCommand}"/>
+                    <Ellipse Grid.Column="0" Width="54" Height="54" Fill="{Binding TargetColorDisplay1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                    <Ellipse Grid.Column="1" Width="54" Height="54" Fill="{Binding TargetColorDisplay2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                    <Ellipse Grid.Column="2" Width="54" Height="54" Fill="{Binding TargetColorDisplay3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                    <Ellipse Grid.Column="3" Width="54" Height="54" Fill="{Binding TargetColorDisplay4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                    <TextBlock Grid.Column="4"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Text="You cracked it!"
+                               Visibility="{Binding WonGame, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </Grid>
-                <Grid Grid.Row="1" HorizontalAlignment="Center"  Background="DarkSlateGray">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
-                    </Grid.ColumnDefinitions>
-                    <Ellipse Grid.Column="0" Width="50" Height="50" Fill="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                    <Ellipse Grid.Column="1" Width="50" Height="50" Fill="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                    <Ellipse Grid.Column="2" Width="50" Height="50" Fill="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                    <Ellipse Grid.Column="3" Width="50" Height="50" Fill="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                </Grid>
-            </Grid>
+            </Border>
+
+            <!-- Attempts history -->
+            <Border Grid.Row="2"
+                    Background="{StaticResource PanelBackground}"
+                    BorderBrush="{StaticResource PanelBorder}"
+                    BorderThickness="1"
+                    CornerRadius="18"
+                    Padding="18"
+                    Margin="0,0,0,24">
+                <StackPanel>
+                    <TextBlock Text="Guess history"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource MutedText}"/>
+                    <TextBlock Text="Track your progress toward the perfect match"
+                               Margin="0,4,0,12"
+                               Foreground="#718096"
+                               FontSize="13"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding DataContext.Attempts, ElementName=View, UpdateSourceTrigger=PropertyChanged}"
+                                      VerticalAlignment="Bottom">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,0,0,12"
+                                            Padding="14"
+                                            Background="#F1F5F9"
+                                            CornerRadius="14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="280"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Ellipse Grid.Column="0" Width="42" Height="42" Fill="{Binding Path=Piece1.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <Ellipse Grid.Column="1" Width="42" Height="42" Fill="{Binding Path=Piece2.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <Ellipse Grid.Column="2" Width="42" Height="42" Fill="{Binding Path=Piece3.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <Ellipse Grid.Column="3" Width="42" Height="42" Fill="{Binding Path=Piece4.Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </Grid>
+                                            <Grid Grid.Column="1" Margin="18,0,0,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Right color & place" Foreground="#475569"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Text="{Binding Path=BlackPieces, UpdateSourceTrigger=PropertyChanged}"
+                                                           FontWeight="Bold" Foreground="#1A365D"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,6,0,0" Text="Right color, wrong place" Foreground="#475569"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Margin="12,6,0,0" Text="{Binding Path=WhitePieces, UpdateSourceTrigger=PropertyChanged}"
+                                                           FontWeight="Bold" Foreground="#1A365D"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <!-- Input section -->
+            <Border Grid.Row="3"
+                    Background="{StaticResource PanelBackground}"
+                    BorderBrush="{StaticResource PanelBorder}"
+                    BorderThickness="1"
+                    CornerRadius="18"
+                    Padding="18">
+                <StackPanel>
+                    <TextBlock Text="Plan your next move"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource MutedText}"/>
+                    <Grid Margin="0,16,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0"
+                                  ItemsSource="{Binding ColorOptions}"
+                                  SelectedValue="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  Style="{StaticResource ColorPickerStyle}"/>
+                        <ComboBox Grid.Column="1"
+                                  Margin="16,0,0,0"
+                                  ItemsSource="{Binding ColorOptions}"
+                                  SelectedValue="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  Style="{StaticResource ColorPickerStyle}"/>
+                        <ComboBox Grid.Column="2"
+                                  Margin="16,0,0,0"
+                                  ItemsSource="{Binding ColorOptions}"
+                                  SelectedValue="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  Style="{StaticResource ColorPickerStyle}"/>
+                        <ComboBox Grid.Column="3"
+                                  Margin="16,0,0,0"
+                                  ItemsSource="{Binding ColorOptions}"
+                                  SelectedValue="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  Style="{StaticResource ColorPickerStyle}"/>
+
+                        <Button Grid.Column="4"
+                                Margin="24,0,0,0"
+                                Width="80"
+                                Height="48"
+                                Content="Try"
+                                Command="{Binding TryAttemptCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                IsEnabled="{Binding AttemptsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+
+                        <StackPanel Grid.Column="5"
+                                    Orientation="Horizontal"
+                                    Margin="24,0,0,0"
+                                    VerticalAlignment="Center">
+                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1"/>
+                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1" Margin="16,0,0,0"/>
+                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1" Margin="16,0,0,0"/>
+                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1" Margin="16,0,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
         </Grid>
     </Grid>
-
 </UserControl>
