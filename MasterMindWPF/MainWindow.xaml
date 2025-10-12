@@ -3,15 +3,79 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MasterMindWPF" xmlns:UserControl="clr-namespace:MasterMindWPF.Views"
+        xmlns:local="clr-namespace:MasterMindWPF"
+        xmlns:UserControl="clr-namespace:MasterMindWPF.Views"
         mc:Ignorable="d"
-        Title="Master Mind">
-    <Grid Background="DarkSlateBlue">
+        Title="MasterMind"
+        WindowStartupLocation="CenterScreen"
+        MinWidth="1100"
+        MinHeight="720"
+        Background="Transparent">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#14192E" Offset="0"/>
+                <GradientStop Color="#24385B" Offset="0.45"/>
+                <GradientStop Color="#1C253F" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="MasterMind" FontSize="72"  Grid.Row="0" TextAlignment="Center" VerticalAlignment="Top"/>
-        <UserControl:BoardView Grid.Row="1" DataContext="{Binding BoardViewModel}" Margin="0,20,0,0"/>
+
+        <Border Grid.Row="0"
+                Margin="40,30,40,20"
+                Padding="24"
+                Background="#10172B"
+                CornerRadius="16">
+            <Border.Effect>
+                <DropShadowEffect Color="#80000000"
+                                  BlurRadius="22"
+                                  ShadowDepth="0"
+                                  Opacity="0.45"/>
+            </Border.Effect>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="MasterMind"
+                               FontSize="44"
+                               FontWeight="Bold"
+                               Foreground="#F7FAFC"/>
+                    <TextBlock Text="Crack the code with style"
+                               Margin="0,6,0,0"
+                               FontSize="16"
+                               Foreground="#A0AEC0"/>
+                </StackPanel>
+                <Border DockPanel.Dock="Right"
+                        Background="#2D3B5B"
+                        CornerRadius="10"
+                        Padding="16,10"
+                        HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="A colorful twist on the classic logic puzzle"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,12,0"
+                                   Foreground="#CBD5F5"/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="1"
+                Margin="40,0,40,40"
+                Padding="24"
+                Background="#F7FAFC"
+                CornerRadius="20">
+            <Border.Effect>
+                <DropShadowEffect Color="#66000000"
+                                  BlurRadius="28"
+                                  ShadowDepth="0"
+                                  Opacity="0.35"/>
+            </Border.Effect>
+            <Grid>
+                <UserControl:BoardView DataContext="{Binding BoardViewModel}"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
