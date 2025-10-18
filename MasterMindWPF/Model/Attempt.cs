@@ -15,13 +15,21 @@ namespace MasterMindWPF.Model {
         private int blackPieces;
         public int BlackPieces {
             get => blackPieces;
-            set => Set(ref blackPieces, value);
+            set {
+                if (Set(ref blackPieces, value)) {
+                    RaisePropertyChanged(nameof(FeedbackPegs));
+                }
+            }
         }
 
         private int whitePieces;
         public int WhitePieces {
             get => whitePieces;
-            set => Set(ref whitePieces, value);
+            set {
+                if (Set(ref whitePieces, value)) {
+                    RaisePropertyChanged(nameof(FeedbackPegs));
+                }
+            }
         }
 
         private int attemptOrderPosition;
@@ -55,11 +63,30 @@ namespace MasterMindWPF.Model {
         }
 
 
+        public IReadOnlyList<FeedbackPegState> FeedbackPegs {
+            get {
+                var pegs = new List<FeedbackPegState>();
+                pegs.AddRange(Enumerable.Repeat(FeedbackPegState.Black, BlackPieces));
+                pegs.AddRange(Enumerable.Repeat(FeedbackPegState.White, WhitePieces));
+
+                while (pegs.Count > 4) {
+                    pegs.RemoveAt(pegs.Count - 1);
+                }
+
+                while (pegs.Count < 4) {
+                    pegs.Add(FeedbackPegState.None);
+                }
+
+                return pegs;
+            }
+        }
+
         public void SetToDefaultPieces() {
             Piece1 = new PatternPiece();
             Piece2 = new PatternPiece();
             Piece3 = new PatternPiece();
             Piece4 = new PatternPiece();
+            RaisePropertyChanged(nameof(FeedbackPegs));
         }
     }
 }

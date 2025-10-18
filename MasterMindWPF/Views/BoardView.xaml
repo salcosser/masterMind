@@ -5,20 +5,37 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MasterMindWPF.Views"
              xmlns:localconverter="clr-namespace:MasterMindWPF.Views.Converters"
+             xmlns:model="clr-namespace:MasterMindWPF.Model"
              mc:Ignorable="d"
              x:Name="View"
              d:DesignHeight="720" d:DesignWidth="1100">
     <UserControl.Resources>
         <localconverter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-        <SolidColorBrush x:Key="PrimaryAccent" Color="#3949AB"/>
-        <SolidColorBrush x:Key="PrimaryAccentLight" Color="#5C6BC0"/>
-        <SolidColorBrush x:Key="MutedText" Color="#4A5568"/>
+        <LinearGradientBrush x:Key="PrimaryButtonBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#8B5CF6" Offset="0"/>
+            <GradientStop Color="#6366F1" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="PrimaryButtonHoverBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#A855F7" Offset="0"/>
+            <GradientStop Color="#4C51BF" Offset="1"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="PrimaryAccent" Color="#7C3AED"/>
+        <SolidColorBrush x:Key="PrimaryAccentLight" Color="#8B5CF6"/>
+        <SolidColorBrush x:Key="MutedText" Color="#1F2937"/>
         <SolidColorBrush x:Key="PanelBackground" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="PanelBorder" Color="#E2E8F0"/>
+        <LinearGradientBrush x:Key="CardGlowBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#EEF2FF" Offset="0"/>
+            <GradientStop Color="#DBEAFE" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="RevealGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#2563EB" Offset="0"/>
+            <GradientStop Color="#7C3AED" Offset="1"/>
+        </LinearGradientBrush>
 
         <Style TargetType="Button" x:Key="PrimaryButtonStyle">
-            <Setter Property="Background" Value="{StaticResource PrimaryAccent}"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryButtonBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -30,13 +47,13 @@
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect Color="#40000000" BlurRadius="12" ShadowDepth="0" Opacity="0.25"/>
+                    <DropShadowEffect Color="#803B82F6" BlurRadius="18" ShadowDepth="0" Opacity="0.65"/>
                 </Setter.Value>
             </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="12">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="16">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
                                               Margin="12,4"/>
@@ -49,7 +66,7 @@
                     <Setter Property="Opacity" Value="0.45"/>
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource PrimaryAccentLight}"/>
+                    <Setter Property="Background" Value="{StaticResource PrimaryButtonHoverBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -82,34 +99,52 @@
         <!-- Scoreboard -->
         <Border Grid.Column="0"
                 Margin="0,0,24,0"
-                Padding="20"
-                Background="{StaticResource PanelBackground}"
-                CornerRadius="18"
-                BorderBrush="{StaticResource PanelBorder}"
-                BorderThickness="1">
+                Padding="28"
+                Background="#10162B"
+                CornerRadius="28"
+                BorderBrush="#3B82F6"
+                BorderThickness="1.5">
+            <Border.Effect>
+                <DropShadowEffect Color="#66111C44" BlurRadius="36" ShadowDepth="0" Opacity="0.6"/>
+            </Border.Effect>
             <StackPanel>
-                <TextBlock Text="Hall of Fame"
-                           FontSize="22"
-                           FontWeight="SemiBold"
-                           Foreground="{StaticResource MutedText}"/>
-                <TextBlock Text="Your smartest crack attempts"
-                           Margin="0,4,0,16"
-                           Foreground="#718096"
-                           FontSize="14"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                    <Ellipse Width="18" Height="18" Fill="#60A5FA" Opacity="0.85">
+                        <Ellipse.Effect>
+                            <DropShadowEffect Color="#AA60A5FA" BlurRadius="18" ShadowDepth="0"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <TextBlock Text="Hall of Fame"
+                               Margin="12,0,0,0"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="#F8FAFF"/>
+                </StackPanel>
+                <TextBlock Text="Celebrate your most brilliant code cracks"
+                           Margin="0,0,0,22"
+                           Foreground="#93C5FD"
+                           FontSize="15"/>
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               MaxHeight="520">
                     <ItemsControl ItemsSource="{Binding DataContext.RecordedGames, ElementName=View, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Margin="0,0,0,12"
-                                        Padding="12"
-                                        Background="#EDF2F7"
-                                        CornerRadius="12">
-                                    <TextBlock Text="{Binding Path=AsText}"
-                                               FontSize="20"
-                                               FontWeight="SemiBold"
-                                               Foreground="#2D3748"
-                                               TextAlignment="Center"/>
+                                <Border Margin="0,0,0,14"
+                                        Padding="16"
+                                        CornerRadius="16"
+                                        Background="#1E293B"
+                                        BorderBrush="#3B82F6"
+                                        BorderThickness="1">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="#40111C44" BlurRadius="20" ShadowDepth="0"/>
+                                    </Border.Effect>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Path=AsText}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#DBEAFE"
+                                                   TextAlignment="Center"/>
+                                    </StackPanel>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -147,29 +182,37 @@
 
                 <Border Grid.Column="2"
                         Margin="20,0,0,0"
-                        Padding="18,12"
-                        Background="#EDF2F7"
-                        CornerRadius="14">
+                        Padding="20,14"
+                        Background="#1E2238"
+                        CornerRadius="18"
+                        BorderBrush="#3B82F6"
+                        BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#33111C44" BlurRadius="18" ShadowDepth="0"/>
+                    </Border.Effect>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <TextBlock Text="Attempts"
                                    FontSize="18"
                                    FontWeight="SemiBold"
-                                   Foreground="#4A5568"/>
+                                   Foreground="#93C5FD"/>
                         <TextBlock Text="{Binding AttemptCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                                    Margin="12,0,0,0"
-                                   FontSize="24"
+                                   FontSize="26"
                                    FontWeight="Bold"
-                                   Foreground="#2C5282"/>
+                                   Foreground="#F8FAFF"/>
                     </StackPanel>
                     <Border.Style>
                         <Style TargetType="Border">
-                            <Setter Property="Background" Value="#EDF2F7"/>
-                            <Setter Property="CornerRadius" Value="14"/>
-                            <Setter Property="Padding" Value="18,12"/>
+                            <Setter Property="Background" Value="#1E2238"/>
+                            <Setter Property="CornerRadius" Value="18"/>
+                            <Setter Property="Padding" Value="20,14"/>
+                            <Setter Property="BorderBrush" Value="#3B82F6"/>
+                            <Setter Property="BorderThickness" Value="1"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                                              Value="True">
-                                    <Setter Property="Background" Value="#C6F6D5"/>
+                                    <Setter Property="Background" Value="#14532D"/>
+                                    <Setter Property="BorderBrush" Value="#22C55E"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -180,28 +223,31 @@
             <!-- Reveal Pattern -->
             <Border Grid.Row="1"
                     Margin="0,0,0,24"
-                    Padding="18"
-                    Background="#1A365D"
-                    CornerRadius="16"
+                    Padding="22"
+                    Background="{StaticResource RevealGradient}"
+                    CornerRadius="22"
                     Visibility="{Binding TargetPatternVisible, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Border.Effect>
+                    <DropShadowEffect Color="#80256EEB" BlurRadius="30" ShadowDepth="0"/>
+                </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Ellipse Grid.Column="0" Width="54" Height="54" Fill="{Binding TargetColorDisplay1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                    <Ellipse Grid.Column="1" Width="54" Height="54" Fill="{Binding TargetColorDisplay2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                    <Ellipse Grid.Column="2" Width="54" Height="54" Fill="{Binding TargetColorDisplay3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                    <Ellipse Grid.Column="3" Width="54" Height="54" Fill="{Binding TargetColorDisplay4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                    <Ellipse Grid.Column="0" Width="58" Height="58" Fill="{Binding TargetColorDisplay1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E0E7FF" StrokeThickness="1.6" Margin="0,0,14,0"/>
+                    <Ellipse Grid.Column="1" Width="58" Height="58" Fill="{Binding TargetColorDisplay2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E0E7FF" StrokeThickness="1.6" Margin="0,0,14,0"/>
+                    <Ellipse Grid.Column="2" Width="58" Height="58" Fill="{Binding TargetColorDisplay3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E0E7FF" StrokeThickness="1.6" Margin="0,0,14,0"/>
+                    <Ellipse Grid.Column="3" Width="58" Height="58" Fill="{Binding TargetColorDisplay4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E0E7FF" StrokeThickness="1.6"/>
                     <TextBlock Grid.Column="4"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               FontSize="24"
+                               FontSize="26"
                                FontWeight="Bold"
-                               Foreground="White"
+                               Foreground="#F8FAFF"
                                Text="You cracked it!"
                                Visibility="{Binding WonGame, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </Grid>
@@ -209,63 +255,149 @@
 
             <!-- Attempts history -->
             <Border Grid.Row="2"
-                    Background="{StaticResource PanelBackground}"
-                    BorderBrush="{StaticResource PanelBorder}"
-                    BorderThickness="1"
-                    CornerRadius="18"
-                    Padding="18"
+                    Background="#F8FAFF"
+                    BorderBrush="#C4B5FD"
+                    BorderThickness="1.2"
+                    CornerRadius="22"
+                    Padding="22"
                     Margin="0,0,0,24">
+                <Border.Effect>
+                    <DropShadowEffect Color="#338B5CF6" BlurRadius="24" ShadowDepth="0"/>
+                </Border.Effect>
                 <StackPanel>
                     <TextBlock Text="Guess history"
-                               FontSize="20"
+                               FontSize="22"
                                FontWeight="SemiBold"
-                               Foreground="{StaticResource MutedText}"/>
+                               Foreground="#312E81"/>
                     <TextBlock Text="Track your progress toward the perfect match"
-                               Margin="0,4,0,12"
-                               Foreground="#718096"
-                               FontSize="13"/>
+                               Margin="0,6,0,16"
+                               Foreground="#6366F1"
+                               FontSize="14"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding DataContext.Attempts, ElementName=View, UpdateSourceTrigger=PropertyChanged}"
                                       VerticalAlignment="Bottom">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0,0,0,12"
-                                            Padding="14"
-                                            Background="#F1F5F9"
-                                            CornerRadius="14">
+                                    <Border Margin="0,0,0,16"
+                                            Padding="20"
+                                            Background="{StaticResource CardGlowBrush}"
+                                            CornerRadius="20">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="#338B5CF6" BlurRadius="22" ShadowDepth="0"/>
+                                        </Border.Effect>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="280"/>
+                                                <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <Grid Grid.Column="0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="1*"/>
-                                                    <ColumnDefinition Width="1*"/>
-                                                    <ColumnDefinition Width="1*"/>
-                                                    <ColumnDefinition Width="1*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <Ellipse Grid.Column="0" Width="42" Height="42" Fill="{Binding Path=Piece1.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                                <Ellipse Grid.Column="1" Width="42" Height="42" Fill="{Binding Path=Piece2.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                                <Ellipse Grid.Column="2" Width="42" Height="42" Fill="{Binding Path=Piece3.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                                <Ellipse Grid.Column="3" Width="42" Height="42" Fill="{Binding Path=Piece4.Color, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Grid>
-                                            <Grid Grid.Column="1" Margin="18,0,0,0">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Right color & place" Foreground="#475569"/>
-                                                <TextBlock Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Text="{Binding Path=BlackPieces, UpdateSourceTrigger=PropertyChanged}"
-                                                           FontWeight="Bold" Foreground="#1A365D"/>
-                                                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,6,0,0" Text="Right color, wrong place" Foreground="#475569"/>
-                                                <TextBlock Grid.Row="1" Grid.Column="1" Margin="12,6,0,0" Text="{Binding Path=WhitePieces, UpdateSourceTrigger=PropertyChanged}"
-                                                           FontWeight="Bold" Foreground="#1A365D"/>
-                                            </Grid>
+
+                                            <StackPanel Grid.Column="0" Margin="0,0,24,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Attempt"
+                                                           FontSize="13"
+                                                           Foreground="#6366F1"/>
+                                                <TextBlock Margin="0,4,0,0"
+                                                           FontSize="22"
+                                                           FontWeight="Bold"
+                                                           Foreground="#312E81"
+                                                           Text="{Binding AttemptOrderPosition}"/>
+                                            </StackPanel>
+
+                                            <Border Grid.Column="1"
+                                                    Background="#FFFFFF"
+                                                    BorderBrush="#C4B5FD"
+                                                    BorderThickness="1"
+                                                    CornerRadius="18"
+                                                    Padding="12"
+                                                    VerticalAlignment="Center">
+                                                <Border.Effect>
+                                                    <DropShadowEffect Color="#1F000000" BlurRadius="20" ShadowDepth="4" Direction="270"/>
+                                                </Border.Effect>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Ellipse Grid.Column="0" Width="44" Height="44" Fill="{Binding Path=Piece1.Color, UpdateSourceTrigger=PropertyChanged}" Stroke="#E2E8F0" StrokeThickness="1.5" Margin="0,0,10,0">
+                                                        <Ellipse.Effect>
+                                                            <DropShadowEffect Color="#22000000" BlurRadius="10" ShadowDepth="2" Direction="315"/>
+                                                        </Ellipse.Effect>
+                                                    </Ellipse>
+                                                    <Ellipse Grid.Column="1" Width="44" Height="44" Fill="{Binding Path=Piece2.Color, UpdateSourceTrigger=PropertyChanged}" Stroke="#E2E8F0" StrokeThickness="1.5" Margin="0,0,10,0">
+                                                        <Ellipse.Effect>
+                                                            <DropShadowEffect Color="#22000000" BlurRadius="10" ShadowDepth="2" Direction="315"/>
+                                                        </Ellipse.Effect>
+                                                    </Ellipse>
+                                                    <Ellipse Grid.Column="2" Width="44" Height="44" Fill="{Binding Path=Piece3.Color, UpdateSourceTrigger=PropertyChanged}" Stroke="#E2E8F0" StrokeThickness="1.5" Margin="0,0,10,0">
+                                                        <Ellipse.Effect>
+                                                            <DropShadowEffect Color="#22000000" BlurRadius="10" ShadowDepth="2" Direction="315"/>
+                                                        </Ellipse.Effect>
+                                                    </Ellipse>
+                                                    <Ellipse Grid.Column="3" Width="44" Height="44" Fill="{Binding Path=Piece4.Color, UpdateSourceTrigger=PropertyChanged}" Stroke="#E2E8F0" StrokeThickness="1.5">
+                                                        <Ellipse.Effect>
+                                                            <DropShadowEffect Color="#22000000" BlurRadius="10" ShadowDepth="2" Direction="315"/>
+                                                        </Ellipse.Effect>
+                                                    </Ellipse>
+                                                </Grid>
+                                            </Border>
+
+                                            <Border Grid.Column="2"
+                                                    Margin="28,0,0,0"
+                                                    Padding="12"
+                                                    Background="#1E293B"
+                                                    BorderBrush="#3B82F6"
+                                                    BorderThickness="1"
+                                                    CornerRadius="14"
+                                                    VerticalAlignment="Center">
+                                                <StackPanel>
+                                                    <TextBlock Text="Feedback"
+                                                               FontSize="12"
+                                                               Margin="0,0,0,6"
+                                                               Foreground="#93C5FD"
+                                                               HorizontalAlignment="Center"/>
+                                                    <ItemsControl ItemsSource="{Binding FeedbackPegs}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <UniformGrid Rows="2" Columns="2"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid Width="24" Height="24" Margin="4">
+                                                                    <Ellipse Stroke="#64748B" StrokeThickness="1.4" Fill="#0F172A" Opacity="0.45">
+                                                                        <Ellipse.Style>
+                                                                            <Style TargetType="Ellipse">
+                                                                                <Setter Property="Stroke" Value="#64748B"/>
+                                                                                <Setter Property="Fill" Value="#0F172A"/>
+                                                                                <Setter Property="Opacity" Value="0.35"/>
+                                                                                <Setter Property="Effect">
+                                                                                    <Setter.Value>
+                                                                                        <DropShadowEffect Color="#66000000" BlurRadius="12" ShadowDepth="0"/>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding}" Value="{x:Static model:FeedbackPegState.Black}">
+                                                                                        <Setter Property="Fill" Value="#111827"/>
+                                                                                        <Setter Property="Stroke" Value="#1E293B"/>
+                                                                                        <Setter Property="Opacity" Value="1"/>
+                                                                                    </DataTrigger>
+                                                                                    <DataTrigger Binding="{Binding}" Value="{x:Static model:FeedbackPegState.White}">
+                                                                                        <Setter Property="Fill" Value="#F8FAFC"/>
+                                                                                        <Setter Property="Stroke" Value="#CBD5F5"/>
+                                                                                        <Setter Property="Opacity" Value="1"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Ellipse.Style>
+                                                                    </Ellipse>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -277,17 +409,24 @@
 
             <!-- Input section -->
             <Border Grid.Row="3"
-                    Background="{StaticResource PanelBackground}"
-                    BorderBrush="{StaticResource PanelBorder}"
-                    BorderThickness="1"
-                    CornerRadius="18"
-                    Padding="18">
+                    Background="#FFFFFF"
+                    BorderBrush="#C4B5FD"
+                    BorderThickness="1.2"
+                    CornerRadius="22"
+                    Padding="22">
+                <Border.Effect>
+                    <DropShadowEffect Color="#338B5CF6" BlurRadius="24" ShadowDepth="0"/>
+                </Border.Effect>
                 <StackPanel>
                     <TextBlock Text="Plan your next move"
-                               FontSize="20"
+                               FontSize="22"
                                FontWeight="SemiBold"
-                               Foreground="{StaticResource MutedText}"/>
-                    <Grid Margin="0,16,0,0">
+                               Foreground="#312E81"/>
+                    <TextBlock Text="Mix, match and submit your boldest guess"
+                               Margin="0,6,0,18"
+                               Foreground="#6366F1"
+                               FontSize="14"/>
+                    <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -326,15 +465,24 @@
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 IsEnabled="{Binding AttemptsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
 
-                        <StackPanel Grid.Column="5"
-                                    Orientation="Horizontal"
-                                    Margin="24,0,0,0"
-                                    VerticalAlignment="Center">
-                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1"/>
-                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1" Margin="16,0,0,0"/>
-                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1" Margin="16,0,0,0"/>
-                            <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#CBD5E0" StrokeThickness="1" Margin="16,0,0,0"/>
-                        </StackPanel>
+                        <Border Grid.Column="5"
+                                Margin="24,0,0,0"
+                                Padding="12"
+                                Background="#F8FAFF"
+                                BorderBrush="#C4B5FD"
+                                BorderThickness="1"
+                                CornerRadius="16"
+                                VerticalAlignment="Center">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#1F000000" BlurRadius="16" ShadowDepth="0"/>
+                            </Border.Effect>
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor1, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E2E8F0" StrokeThickness="1.2"/>
+                                <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor2, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E2E8F0" StrokeThickness="1.2" Margin="16,0,0,0"/>
+                                <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor3, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E2E8F0" StrokeThickness="1.2" Margin="16,0,0,0"/>
+                                <Ellipse Width="44" Height="44" Fill="{Binding SelectedColor4, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Stroke="#E2E8F0" StrokeThickness="1.2" Margin="16,0,0,0"/>
+                            </StackPanel>
+                        </Border>
                     </Grid>
                 </StackPanel>
             </Border>
