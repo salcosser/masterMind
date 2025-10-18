@@ -196,41 +196,48 @@ namespace MasterMindWPF.ViewModels
             attempt.BlackPieces = 0;
             attempt.WhitePieces = 0;
 
-            var usableTargets = new int[] { 1, 1, 1, 1 };
-            var targetDict = new Dictionary<int, string>
+            var guess = new[]
             {
-                { 0, TargetColorDisplay1 },
-                { 1, TargetColorDisplay2 },
-                { 2, TargetColorDisplay3 },
-                { 3, TargetColorDisplay4 }
+                attempt.Piece1.ColorName,
+                attempt.Piece2.ColorName,
+                attempt.Piece3.ColorName,
+                attempt.Piece4.ColorName
             };
 
-            var attemptDict = new Dictionary<int, string>
+            var target = new[]
             {
-                { 0, attempt.Piece1.ColorName },
-                { 1, attempt.Piece2.ColorName },
-                { 2, attempt.Piece3.ColorName },
-                { 3, attempt.Piece4.ColorName }
+                TargetColorDisplay1,
+                TargetColorDisplay2,
+                TargetColorDisplay3,
+                TargetColorDisplay4
             };
 
+            var guessUsed = new bool[4];
+            var targetUsed = new bool[4];
 
-
-            for(int i = 0; i < 4; i++) {
-                if (attemptDict[i].Equals(targetDict[i])) {
+            for (var i = 0; i < 4; i++) {
+                if (!string.IsNullOrEmpty(guess[i]) && guess[i] == target[i]) {
                     attempt.BlackPieces++;
-                    targetDict.Remove(i);
-                    attemptDict.Remove(i);
+                    guessUsed[i] = true;
+                    targetUsed[i] = true;
                 }
             }
 
-            var remainingSet = targetDict.Select(t => t.Value).ToList();
+            for (var i = 0; i < 4; i++) {
+                if (guessUsed[i] || string.IsNullOrEmpty(guess[i])) {
+                    continue;
+                }
 
-            foreach(var remainingKey in attemptDict.Keys) {
-                var idx = remainingSet.IndexOf(attemptDict[remainingKey]);
+                for (var j = 0; j < 4; j++) {
+                    if (targetUsed[j] || string.IsNullOrEmpty(target[j])) {
+                        continue;
+                    }
 
-                if (idx > -1) {
-                    attempt.WhitePieces++;
-                    remainingSet.RemoveAt(idx);
+                    if (guess[i] == target[j]) {
+                        attempt.WhitePieces++;
+                        targetUsed[j] = true;
+                        break;
+                    }
                 }
             }
 
