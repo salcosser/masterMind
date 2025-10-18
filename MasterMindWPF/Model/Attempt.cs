@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace MasterMindWPF.Model {
     public class Attempt : BindableBase {
 
+        private readonly ObservableCollection<FeedbackPegState> feedbackPegs;
+        private readonly ReadOnlyObservableCollection<FeedbackPegState> readOnlyFeedbackPegs;
+
         public Attempt() {
+            feedbackPegs = new ObservableCollection<FeedbackPegState>();
+            readOnlyFeedbackPegs = new ReadOnlyObservableCollection<FeedbackPegState>(feedbackPegs);
+            UpdateFeedbackPegs();
         }
 
         private int blackPieces;
@@ -17,7 +18,7 @@ namespace MasterMindWPF.Model {
             get => blackPieces;
             set {
                 if (Set(ref blackPieces, value)) {
-                    RaisePropertyChanged(nameof(FeedbackPegs));
+                    UpdateFeedbackPegs();
                 }
             }
         }
@@ -27,7 +28,7 @@ namespace MasterMindWPF.Model {
             get => whitePieces;
             set {
                 if (Set(ref whitePieces, value)) {
-                    RaisePropertyChanged(nameof(FeedbackPegs));
+                    UpdateFeedbackPegs();
                 }
             }
         }
@@ -62,22 +63,28 @@ namespace MasterMindWPF.Model {
             set => Set(ref piece4, value);
         }
 
+        public ReadOnlyObservableCollection<FeedbackPegState> FeedbackPegs => readOnlyFeedbackPegs;
 
-        public IReadOnlyList<FeedbackPegState> FeedbackPegs {
-            get {
-                var pegs = new List<FeedbackPegState>();
-                pegs.AddRange(Enumerable.Repeat(FeedbackPegState.Black, BlackPieces));
-                pegs.AddRange(Enumerable.Repeat(FeedbackPegState.White, WhitePieces));
+        private void UpdateFeedbackPegs() {
+            feedbackPegs.Clear();
 
-                while (pegs.Count > 4) {
-                    pegs.RemoveAt(pegs.Count - 1);
-                }
+            var blacks = Math.Max(0, Math.Min(BlackPieces, 4));
+            var whites = Math.Max(0, Math.Min(WhitePieces, 4));
 
-                while (pegs.Count < 4) {
-                    pegs.Add(FeedbackPegState.None);
-                }
+            for (var i = 0; i < blacks && feedbackPegs.Count < 4; i++) {
+                feedbackPegs.Add(FeedbackPegState.Black);
+            }
 
-                return pegs;
+            for (var i = 0; i < whites && feedbackPegs.Count < 4; i++) {
+                feedbackPegs.Add(FeedbackPegState.White);
+            }
+
+            while (feedbackPegs.Count < 4) {
+                feedbackPegs.Add(FeedbackPegState.None);
+            }
+
+            while (feedbackPegs.Count > 4) {
+                feedbackPegs.RemoveAt(feedbackPegs.Count - 1);
             }
         }
 
@@ -86,7 +93,9 @@ namespace MasterMindWPF.Model {
             Piece2 = new PatternPiece();
             Piece3 = new PatternPiece();
             Piece4 = new PatternPiece();
-            RaisePropertyChanged(nameof(FeedbackPegs));
+            BlackPieces = 0;
+            WhitePieces = 0;
+            UpdateFeedbackPegs();
         }
     }
 }

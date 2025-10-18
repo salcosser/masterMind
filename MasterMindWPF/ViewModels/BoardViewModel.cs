@@ -193,6 +193,9 @@ namespace MasterMindWPF.ViewModels
 
         public void GradeAttempt(ref Attempt attempt) {
 
+            attempt.BlackPieces = 0;
+            attempt.WhitePieces = 0;
+
             var usableTargets = new int[] { 1, 1, 1, 1 };
             var targetDict = new Dictionary<int, string>
             {
